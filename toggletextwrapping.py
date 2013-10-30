@@ -1,7 +1,8 @@
 # -*- coding: utf8 -*-
-# Toggle Text Wrapping Gedit plugin
 #
-# This file is part of the Toggle Text Wrapping plugin for Gedit
+# toggletextwrapping.py
+# This file is part of Toggle Text Wrapping, a plugin for gedit
+#
 # Copyright (C) 2008-2009 Christian Hartmann <christian.hartmann@berlin.de>
 # Copyright (C) 2011 Francisco Franchetti <nixahn@gmail.com>
 # Copyright (C) 2013 Jeffery To <jeffery.to@gmail.com>
