@@ -27,13 +27,13 @@ ui_str = """<ui>
 	<menubar name="MenuBar">
 		<menu name="ViewMenu" action="View">
 			<placeholder name="ViewOps_2">
-				<menuitem name="ToggleTextWrappingMenuItem" action="ToggleTextWrappingAction" />
+				<menuitem name="ToggleTextWrappingMenuItem" action="ToggleTextWrappingPluginToggle" />
 			</placeholder>
 		</menu>
 	</menubar>
 	<toolbar name="ToolBar">
 		<separator />
-		<toolitem name="ToggleTextWrappingToolItem" action="ToggleTextWrappingAction" />
+		<toolitem name="ToggleTextWrappingToolItem" action="ToggleTextWrappingPluginToggle" />
 	</toolbar>
 </ui>
 """
@@ -83,20 +83,14 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 		self._action_group = None
 
 	def do_update_state(self):
-		self._set_sensitivity()
-		self._update_ui()
+		view = self.window.get_active_view()
+		self._action.set_sensitive(view is not None)
+		self._action.set_active(view is not None and view.get_wrap_mode() != Gtk.WrapMode.NONE)
 
 	def on_toggle_action_activate(self, action):
 		view = self.window.get_active_view()
 		if view:
 			view.set_wrap_mode(self.DEFAULT_WRAP_MODE if action.get_active() else Gtk.WrapMode.NONE)
-
-	def _set_sensitivity(self):
-		self._action.set_sensitive(self.window.get_active_document() is not None)
-
-	def _update_ui(self):
-		view = self.window.get_active_view()
-		self._action.set_active(view is not None and view.get_wrap_mode() != Gtk.WrapMode.NONE)
 
 	def _connect_handlers(self, obj, signals, m, *args):
 		HANDLER_IDS = self.HANDLER_IDS
