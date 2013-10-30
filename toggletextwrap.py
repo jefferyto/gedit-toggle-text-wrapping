@@ -2,7 +2,9 @@
 # Text Wrap Gedit Plugin
 #
 # This file is part of the Text Wrap Plugin for Gedit
+# Copyright (C) 2008-2009 Christian Hartmann <christian.hartmann@berlin.de>
 # Copyright (C) 2011 Francisco Franchetti <nixahn@gmail.com>
+# Copyright (C) 2013 Jeffery To <jeffery.to@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
