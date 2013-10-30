@@ -20,44 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# This plugin is intended to ease the setting of Text Wrap (aka Line Wrap,
-# Word Wrap) by either a Keyboard Shortcurt (currently sticked to Shift-Ctrl-B),
-# a new entry in the View Menu or by an Icon in the Toolbar. The use of either 
-# option works as a toggle (de- or activate text wrap). The initial setting for 
-# new or new opened files is taken from the setting in the Preferences dialog 
-# and remembered per file as long thew file is open. 
-
-# This plugin was developed for gedit 2 by Christian Hartmann at <christian.hartmann@berlin.de>. Parts of this plugin are based on the work of Mike Doty <mike@psyguygames.com>
-# who wrote the infamous SplitView plugin. The rest is inspired from the Python
-# Plugin Howto document and the Python-GTK documentation.
-
-# CHANGELOG
-# =========
-# * 2008-10-10:
-#   0.1 initial release for private use only
-# * 2009-04-26:
-#   0.2 changed filenames from textwrap to TextWrap as it conflicts with 
-#   /usr/lib/python2.6/textwrap.py when loading the plugin. Unfortunately
-#   i have no real clue what actualy is causing this conflict. This might
-#   be reasoned by a change in the Gedit Python Plugin Loader, as this has
-#   not been happening before upgrading gedit or a prerequisite of it through
-#   an upgrade of my Ubuntu to 8.10 or 9.04. Added a couple documentst mainly
-#   to ease the burdon of installation for gedit plugin beginners and made it
-#   public available on my company website: http://hartmann-it-design.de/gedit
-# * 2011-11-05:
-#   migration to gedit 3 by Francisco Franchetti. things changed are
-#   in the .py file
-#   _ dont use the enums in capital letters; look up the numbers online and use those
-#   _ gtk -> Gtk
-#	_ add the do_ in front of activate, deactivate, update_state (not update_ui); a good practice would be to add it to the custom methods too
-#   _ def statements don't have the window argument (defined for the class in the beginning)
-#   _ import statements are different
-#	_ class definition, init are different
-#   _ delete first line with the !/dev...
-#   in the .plugin file
-#   _ [Gedit plugin] -> [Plugin]
-#   _ IAge=3
-
 # import basic requisites
 from gi.repository import GObject, Gtk, Gdk, Gedit
 

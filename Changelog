@@ -1,0 +1,26 @@
+# CHANGELOG
+# =========
+# * 2008-10-10:
+#   0.1 initial release for private use only
+# * 2009-04-26:
+#   0.2 changed filenames from textwrap to TextWrap as it conflicts with 
+#   /usr/lib/python2.6/textwrap.py when loading the plugin. Unfortunately
+#   i have no real clue what actualy is causing this conflict. This might
+#   be reasoned by a change in the Gedit Python Plugin Loader, as this has
+#   not been happening before upgrading gedit or a prerequisite of it through
+#   an upgrade of my Ubuntu to 8.10 or 9.04. Added a couple documentst mainly
+#   to ease the burdon of installation for gedit plugin beginners and made it
+#   public available on my company website: http://hartmann-it-design.de/gedit
+# * 2011-11-05:
+#   migration to gedit 3 by Francisco Franchetti. things changed are
+#   in the .py file
+#   _ dont use the enums in capital letters; look up the numbers online and use those
+#   _ gtk -> Gtk
+#	_ add the do_ in front of activate, deactivate, update_state (not update_ui); a good practice would be to add it to the custom methods too
+#   _ def statements don't have the window argument (defined for the class in the beginning)
+#   _ import statements are different
+#	_ class definition, init are different
+#   _ delete first line with the !/dev...
+#   in the .plugin file
+#   _ [Gedit plugin] -> [Plugin]
+#   _ IAge=3
