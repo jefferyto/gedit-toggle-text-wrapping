@@ -1,0 +1,12 @@
+[Plugin]
+Loader=python
+Module=toggletextwrap
+IAge=3
+Name=Text Wrap
+Description=Toggle Text Wrap Setting by Menu Entry or Toolbar Button
+Name[de]=Textumbruch
+Description[de]=Textumbruch über Menü-Eintrag oder Werkzeugleiste umschalten
+Icon=gtk-ok
+Authors=Christian Hartmann <gedit@hartmann-it-design.de> Francisco Franchetti <nixahn@gmail.com>
+Copyright=Copyright (C) 2008-2011 Christian Hartmann, Francisco Franchetti
+Version=0.3.0
