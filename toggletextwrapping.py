@@ -1,10 +1,11 @@
 # -*- coding: utf8 -*-
-# Text Wrap Gedit Plugin
+# Toggle Text Wrapping Gedit plugin
 #
-# This file is part of the Text Wrap Plugin for Gedit
+# This file is part of the Toggle Text Wrapping plugin for Gedit
 # Copyright (C) 2008-2009 Christian Hartmann <christian.hartmann@berlin.de>
 # Copyright (C) 2011 Francisco Franchetti <nixahn@gmail.com>
 # Copyright (C) 2013 Jeffery To <jeffery.to@gmail.com>
+# https://github.com/jefferyto/gedit-toggle-text-wrapping
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
