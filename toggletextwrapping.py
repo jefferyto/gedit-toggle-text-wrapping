@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import GObject, Gtk, Gedit
+from gi.repository import GObject, Gtk, Gio, Gedit
 
 ui_str = """<ui>
 	<menubar name="MenuBar">
@@ -49,10 +49,15 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 
 	HANDLER_IDS = 'ToggleTextWrappingPluginHandlerIds'
 
+	WRAP_MODE_SETTINGS_SCHEMA = 'org.gnome.gedit.preferences.editor'
+	WRAP_MODE_SETTINGS_KEY = 'wrap-mode'
+
 	def __init__(self):
 		GObject.Object.__init__(self)
 
 	def do_activate(self):
+		window = self.window
+
 		action_group = Gtk.ActionGroup('ToggleTextWrappingPluginActions')
 		action_group.set_translation_domain('gedit')
 		action = Gtk.ToggleAction('ToggleTextWrappingPluginToggle', _("Enable Text Wrapping"), _("Toggle text wrapping for the current document"), Gtk.STOCK_OK)
@@ -60,20 +65,40 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 
 		self._connect_handlers(action, ('activate',), 'toggle_action')
 
-		manager = self.window.get_ui_manager()
+		manager = window.get_ui_manager()
 		manager.insert_action_group(action_group, -1)
 		ui_id = manager.add_ui_from_string(ui_str)
+
+		settings = Gio.Settings.new(self.WRAP_MODE_SETTINGS_SCHEMA)
+		self._connect_handlers(settings, ('changed::' + self.WRAP_MODE_SETTINGS_KEY,), 'pref')
 
 		self._ui_id = ui_id
 		self._action = action
 		self._action_group = action_group
+		self._settings = settings
+		self._wrap_mode = self.DEFAULT_WRAP_MODE
+
+		self.on_pref_changed_wrap_mode(settings, self.WRAP_MODE_SETTINGS_KEY)
+
+		for doc in window.get_documents():
+			self.on_window_tab_added(window, Gedit.Tab.get_from_document(doc))
+
+		self._connect_handlers(window, ('tab-added', 'tab-removed'), 'window')
 
 		self.do_update_state()
 
 	def do_deactivate(self):
+		window = self.window
+
+		self._disconnect_handlers(window)
+
+		for doc in window.get_documents():
+			self.on_window_tab_removed(window, Gedit.Tab.get_from_document(doc))
+
+		self._disconnect_handlers(self._settings)
 		self._disconnect_handlers(self._action)
 
-		manager = self.window.get_ui_manager()
+		manager = window.get_ui_manager()
 		manager.remove_ui(self._ui_id)
 		manager.remove_action_group(self._action_group)
 		manager.ensure_update()
@@ -81,6 +106,8 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 		self._ui_id = None
 		self._action = None
 		self._action_group = None
+		self._settings = None
+		self._wrap_mode = None
 
 	def do_update_state(self):
 		view = self.window.get_active_view()
@@ -90,7 +117,26 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 	def on_toggle_action_activate(self, action):
 		view = self.window.get_active_view()
 		if view:
-			view.set_wrap_mode(self.DEFAULT_WRAP_MODE if action.get_active() else Gtk.WrapMode.NONE)
+			self._block_handlers(view)
+			view.set_wrap_mode(self._wrap_mode if action.get_active() else Gtk.WrapMode.NONE)
+			self._unblock_handlers(view)
+
+	def on_pref_changed_wrap_mode(self, settings, key):
+		value = settings.get_string(key)
+		if value == 'word':
+			self._wrap_mode = Gtk.WrapMode.WORD
+		elif value == 'char':
+			self._wrap_mode = Gtk.WrapMode.CHAR
+
+	def on_window_tab_added(self, window, tab):
+		self._connect_handlers(tab.get_view(), ('notify::wrap-mode',), 'view')
+
+	def on_window_tab_removed(self, window, tab):
+		self._disconnect_handlers(tab.get_view())
+
+	def on_view_notify_wrap_mode(self, view, prop):
+		if self.window.get_active_view() == view:
+			self.do_update_state()
 
 	def _connect_handlers(self, obj, signals, m, *args):
 		HANDLER_IDS = self.HANDLER_IDS
