@@ -59,58 +59,33 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 			view.set_wrap_mode(0)
 
 	def do_activate(self):
-		
-		# Get initial state from text wrapping in this view (not available
-		# on gedit startup but if plugin is enabled during the gedit session
-		# and for what ever reason we do not have an update ui signal on init)
-		view = self.window.get_active_view()
-		try:
-			current_wrap_mode = view.get_wrap_mode()
-			# the order gives the numbers, starting at 0 for WRAP_NONE
-			# typedef enum {
-			# 	GTK_WRAP_NONE,
-			# 	GTK_WRAP_CHAR,
-			# 	GTK_WRAP_WORD,
-			# 	GTK_WRAP_WORD_CHAR
-			# } GtkWrapMode;
-			if current_wrap_mode == 0:
-				self._initial_toggle_state = False
-			else:
-				self._initial_toggle_state = True
-		except:
-			# Define default initial state for the plugin (should read this from the preferences file)
-			self._initial_toggle_state = False
-			# view.set_wrap_mode(0)	
-
-		# Add "Toggle Text Wrap" to the View menu and to the Toolbar
-		# Get the GtkUIManager
-		self._manager = self.window.get_ui_manager()
-		# Create a new action group
-		self._action_group = Gtk.ActionGroup("GeditTextWrapPluginActions")
-		self._action_group.add_toggle_actions([(
+		action_group = Gtk.ActionGroup("GeditTextWrapPluginActions")
+		action_group.add_toggle_actions([(
 				self.TOGGLE_ACTION,
 				"gtk-ok",
 				_("Text Wrap"),
 				self.TOGGLE_ACCELERATOR,
 				_("Toggle Current Text Wrap Setting"),
 				self.do_toggle_text_wrap,
-				self._initial_toggle_state)])
-		# Insert the action group
-		self._manager.insert_action_group(self._action_group)
-		# Add my item to the "Views" menu and to the Toolbar
-		self._ui_id = self._manager.add_ui_from_string(ui_str)
-		# Debug merged ui
-		self._manager.ensure_update()
+				False)])
+
+		manager = self.window.get_ui_manager()
+		manager.insert_action_group(action_group, -1)
+		ui_id = manager.add_ui_from_string(ui_str)
+
+		self._ui_id = ui_id
+		self._action_group = action_group
+
+		self.do_update_state()
 
 	def do_deactivate(self):
-		# Remove the ui
-		self._manager.remove_ui(self._ui_id)
+		manager = self.window.get_ui_manager()
+		manager.remove_ui(self._ui_id)
+		manager.remove_action_group(self._action_group)
+		manager.ensure_update()
+
 		self._ui_id = None
-		# Remove action group
-		self._manager.remove_action_group(self._action_group)
 		self._action_group = None
-		# ensure that manager updates
-		self._manager.ensure_update()
 
 	def do_update_state(self):
 		view = self.window.get_active_view()
