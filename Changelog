@@ -1,0 +1,42 @@
+2013-10-31  Jeffery To  <jeffery.to@gmail.com>
+
+	0.3.1, a "minor" release:
+	* When toggling text wrapping, use the user's preferred wrap mode
+	  (from preferences) when possible
+	* Fixed toggle state when the user changes their text wrapping
+	  preferences (and thus changing the wrap mode of all open
+	  documents)
+	* Made .plugin file compatible with gedit 3.8, adding a separate
+	  .plugin file for gedit < 3.8
+	* Code cleanup
+
+2011-11-05  Francisco Franchetti  <nixahn@gmail.com>
+
+	migration to gedit 3 by Francisco Franchetti. things changed are
+	in the .py file
+
+	_ dont use the enums in capital letters; look up the numbers online and use those
+	_ gtk -> Gtk
+	_ add the do_ in front of activate, deactivate, update_state (not update_ui); a good practice would be to add it to the custom methods too
+	_ def statements don't have the window argument (defined for the class in the beginning)
+	_ import statements are different
+	_ class definition, init are different
+	_ delete first line with the !/dev...
+	in the .plugin file
+	_ [Gedit plugin] -> [Plugin]
+	_ IAge=3
+
+2009-04-26  Christian Hartmann  <christian.hartmann@berlin.de>
+
+	0.2 changed filenames from textwrap to TextWrap as it conflicts with
+	/usr/lib/python2.6/textwrap.py when loading the plugin. Unfortunately
+	i have no real clue what actualy is causing this conflict. This might
+	be reasoned by a change in the Gedit Python Plugin Loader, as this has
+	not been happening before upgrading gedit or a prerequisite of it through
+	an upgrade of my Ubuntu to 8.10 or 9.04. Added a couple documentst mainly
+	to ease the burdon of installation for gedit plugin beginners and made it
+	public available on my company website: http://hartmann-it-design.de/gedit
+
+2008-10-10  Christian Hartmann  <christian.hartmann@berlin.de>
+
+	0.1 initial release for private use only
