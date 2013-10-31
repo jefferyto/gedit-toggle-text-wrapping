@@ -15,8 +15,9 @@ Christian Hartmann.
 ## Installation ##
 
 1.  Download the source code (as [zip][] or [tar.gz][]) and extract.
-2.  Copy `toggletextwrapping.py` and the appropriate `.plugin` file into
-    `~/.local/share/gedit/plugins` (create if it does not exist):
+2.  Copy the `toggletextwrapping` folder and the appropriate `.plugin`
+    file into `~/.local/share/gedit/plugins` (create if it does not
+    exist):
     *   For gedit 3.6 and earlier, copy
         `toggletextwrapping.plugin.python2` and rename to
         `toggletextwrapping.plugin`.

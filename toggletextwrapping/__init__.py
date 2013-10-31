@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 #
-# toggletextwrapping.py
+# __init__.py
 # This file is part of Toggle Text Wrapping, a plugin for gedit
 #
 # Copyright (C) 2008-2009 Christian Hartmann <christian.hartmann@berlin.de>
@@ -22,6 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import GObject, Gtk, Gio, Gedit
+from .util import connect_handlers, disconnect_handlers, block_handlers, unblock_handlers
 
 ui_str = """<ui>
 	<menubar name="MenuBar">
@@ -47,8 +48,6 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 
 	DEFAULT_WRAP_MODE = Gtk.WrapMode.WORD # or Gtk.WrapMode.CHAR
 
-	HANDLER_IDS = 'ToggleTextWrappingPluginHandlerIds'
-
 	WRAP_MODE_SETTINGS_SCHEMA = 'org.gnome.gedit.preferences.editor'
 	WRAP_MODE_SETTINGS_KEY = 'wrap-mode'
 
@@ -63,14 +62,14 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 		action = Gtk.ToggleAction('ToggleTextWrappingPluginToggle', _("Enable Text Wrapping"), _("Toggle text wrapping for the current document"), Gtk.STOCK_OK)
 		action_group.add_action_with_accel(action, self.TOGGLE_ACCELERATOR)
 
-		self._connect_handlers(action, ('activate',), 'toggle_action')
+		connect_handlers(self, action, ('activate',), 'toggle_action')
 
 		manager = window.get_ui_manager()
 		manager.insert_action_group(action_group, -1)
 		ui_id = manager.add_ui_from_string(ui_str)
 
 		settings = Gio.Settings.new(self.WRAP_MODE_SETTINGS_SCHEMA)
-		self._connect_handlers(settings, ('changed::' + self.WRAP_MODE_SETTINGS_KEY,), 'pref')
+		connect_handlers(self, settings, ('changed::' + self.WRAP_MODE_SETTINGS_KEY,), 'pref')
 
 		self._ui_id = ui_id
 		self._action = action
@@ -83,20 +82,20 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 		for doc in window.get_documents():
 			self.on_window_tab_added(window, Gedit.Tab.get_from_document(doc))
 
-		self._connect_handlers(window, ('tab-added', 'tab-removed'), 'window')
+		connect_handlers(self, window, ('tab-added', 'tab-removed'), 'window')
 
 		self.do_update_state()
 
 	def do_deactivate(self):
 		window = self.window
 
-		self._disconnect_handlers(window)
+		disconnect_handlers(self, window)
 
 		for doc in window.get_documents():
 			self.on_window_tab_removed(window, Gedit.Tab.get_from_document(doc))
 
-		self._disconnect_handlers(self._settings)
-		self._disconnect_handlers(self._action)
+		disconnect_handlers(self, self._settings)
+		disconnect_handlers(self, self._action)
 
 		manager = window.get_ui_manager()
 		manager.remove_ui(self._ui_id)
@@ -117,9 +116,9 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 	def on_toggle_action_activate(self, action):
 		view = self.window.get_active_view()
 		if view:
-			self._block_handlers(view)
+			block_handlers(self, view)
 			view.set_wrap_mode(self._wrap_mode if action.get_active() else Gtk.WrapMode.NONE)
-			self._unblock_handlers(view)
+			unblock_handlers(self, view)
 
 	def on_pref_changed_wrap_mode(self, settings, key):
 		value = settings.get_string(key)
@@ -129,44 +128,11 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 			self._wrap_mode = Gtk.WrapMode.CHAR
 
 	def on_window_tab_added(self, window, tab):
-		self._connect_handlers(tab.get_view(), ('notify::wrap-mode',), 'view')
+		connect_handlers(self, tab.get_view(), ('notify::wrap-mode',), 'view')
 
 	def on_window_tab_removed(self, window, tab):
-		self._disconnect_handlers(tab.get_view())
+		disconnect_handlers(self, tab.get_view())
 
 	def on_view_notify_wrap_mode(self, view, prop):
 		if self.window.get_active_view() == view:
 			self.do_update_state()
-
-	def _connect_handlers(self, obj, signals, m, *args):
-		HANDLER_IDS = self.HANDLER_IDS
-		l_ids = getattr(obj, HANDLER_IDS) if hasattr(obj, HANDLER_IDS) else []
-
-		for signal in signals:
-			if type(m).__name__ == 'str':
-				method = getattr(self, 'on_' + m + '_' + signal.replace('-', '_').replace('::', '_'))
-			else:
-				method = m
-			l_ids.append(obj.connect(signal, method, *args))
-
-		setattr(obj, HANDLER_IDS, l_ids)
-
-	def _disconnect_handlers(self, obj):
-		HANDLER_IDS = self.HANDLER_IDS
-		if hasattr(obj, HANDLER_IDS):
-			for l_id in getattr(obj, HANDLER_IDS):
-				obj.disconnect(l_id)
-
-			delattr(obj, HANDLER_IDS)
-
-	def _block_handlers(self, obj):
-		HANDLER_IDS = self.HANDLER_IDS
-		if hasattr(obj, HANDLER_IDS):
-			for l_id in getattr(obj, HANDLER_IDS):
-				obj.handler_block(l_id)
-
-	def _unblock_handlers(self, obj):
-		HANDLER_IDS = self.HANDLER_IDS
-		if hasattr(obj, HANDLER_IDS):
-			for l_id in getattr(obj, HANDLER_IDS):
-				obj.handler_unblock(l_id)
