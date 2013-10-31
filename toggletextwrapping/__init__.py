@@ -68,10 +68,15 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 		manager.insert_action_group(action_group, -1)
 		ui_id = manager.add_ui_from_string(ui_str)
 
+		fullscreen_ui_id = manager.new_merge_id()
+		manager.add_ui(fullscreen_ui_id, '/FullscreenToolBar/SearchReplace', 'ToggleTextWrappingFullscreenToolItem', 'ToggleTextWrappingPluginToggle', Gtk.UIManagerItemType.TOOLITEM, False)
+		manager.add_ui(fullscreen_ui_id, '/FullscreenToolBar/SearchReplace', '', None, Gtk.UIManagerItemType.SEPARATOR, False)
+
 		settings = Gio.Settings.new(self.WRAP_MODE_SETTINGS_SCHEMA)
 		connect_handlers(self, settings, ('changed::' + self.WRAP_MODE_SETTINGS_KEY,), 'pref')
 
 		self._ui_id = ui_id
+		self._fullscreen_ui_id = fullscreen_ui_id
 		self._action = action
 		self._action_group = action_group
 		self._settings = settings
@@ -98,11 +103,13 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 		disconnect_handlers(self, self._action)
 
 		manager = window.get_ui_manager()
+		manager.remove_ui(self._fullscreen_ui_id)
 		manager.remove_ui(self._ui_id)
 		manager.remove_action_group(self._action_group)
 		manager.ensure_update()
 
 		self._ui_id = None
+		self._fullscreen_ui_id = None
 		self._action = None
 		self._action_group = None
 		self._settings = None
