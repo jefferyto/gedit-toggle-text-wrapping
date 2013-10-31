@@ -1,3 +1,15 @@
+2013-10-31  Jeffery To  <jeffery.to@gmail.com>
+
+	0.3.1, a "minor" release:
+	* When toggling text wrapping, use the user's preferred wrap mode
+	  (from preferences) when possible
+	* Fixed toggle state when the user changes their text wrapping
+	  preferences (and thus changing the wrap mode of all open
+	  documents)
+	* Made .plugin file compatible with gedit 3.8, adding a separate
+	  .plugin file for gedit < 3.8
+	* Code cleanup
+
 2011-11-05  Francisco Franchetti  <nixahn@gmail.com>
 
 	migration to gedit 3 by Francisco Franchetti. things changed are
