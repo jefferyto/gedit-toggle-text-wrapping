@@ -39,6 +39,12 @@ Note that this only affects the current (active) document; text wrapping
 for documents in other tabs and/or windows will be unaffected, and the
 global text wrapping preferences will remain unchanged.
 
+## Development ##
+
+The code in `toggletextwrapping/utils` comes from [python-gtk-utils][];
+changes should ideally be contributed to that project, then pulled back
+into this one with `git subtree pull`.
+
 ## Credits ##
 
 Christian Hartmann:  
@@ -65,3 +71,4 @@ Available under GNU General Public License version 3
 [zip]: https://github.com/jefferyto/gedit-toggle-text-wrapping/archive/master.zip
 [tar.gz]: https://github.com/jefferyto/gedit-toggle-text-wrapping/archive/master.tar.gz
 [0.2.0]: http://hartmann-it-design.de/gedit/TextWrap/index.html
+[python-gtk-utils]: https://github.com/jefferyto/python-gtk-utils

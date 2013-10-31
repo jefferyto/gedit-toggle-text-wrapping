@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import GObject, Gtk, Gio, Gedit
-from .util import connect_handlers, disconnect_handlers, block_handlers, unblock_handlers
+from .utils import connect_handlers, disconnect_handlers, block_handlers, unblock_handlers
 
 ui_str = """<ui>
 	<menubar name="MenuBar">
