@@ -30,7 +30,7 @@ Christian Hartmann.
 
 To toggle text wrapping for the current document, either:
 
-*   Select **View > Text Wrap**;
+*   Select **View > Enable Text Wrapping**;
 *   Click the checkmark button in the Toolbar; or
 *   Use the <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> keyboard
     shortcut.
