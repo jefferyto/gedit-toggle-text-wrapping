@@ -9,4 +9,4 @@ Icon=gtk-ok
 Authors=Christian Hartmann <gedit@hartmann-it-design.de>;Francisco Franchetti <nixahn@gmail.com>;Jeffery To <jeffery.to@gmail.com>
 Copyright=Copyright © 2008-2009 Christian Hartmann;Copyright © 2011 Francisco Franchetti;Copyright © 2013 Jeffery To
 Website=https://github.com/jefferyto/gedit-toggle-text-wrapping
-Version=0.3.1
+Version=0.3.2

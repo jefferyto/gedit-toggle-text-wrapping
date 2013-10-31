@@ -2,7 +2,7 @@
 
 Quickly toggle text wrapping from the View menu or Toolbar  
 <https://github.com/jefferyto/gedit-toggle-text-wrapping>  
-0.3.1
+0.3.2
 
 All bug reports, feature requests and miscellaneous comments are welcome
 at the [project issue tracker][].
