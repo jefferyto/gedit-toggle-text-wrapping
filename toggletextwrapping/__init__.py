@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 #
 # __init__.py
 # This file is part of Toggle Text Wrapping, a plugin for gedit
@@ -110,8 +110,9 @@ class ToggleTextWrappingPlugin(GObject.Object, Gedit.WindowActivatable):
 
 	def do_update_state(self):
 		view = self.window.get_active_view()
-		self._action.set_sensitive(view is not None)
-		self._action.set_active(view is not None and view.get_wrap_mode() != Gtk.WrapMode.NONE)
+		action = self._action
+		action.set_sensitive(view is not None)
+		action.set_active(view is not None and view.get_wrap_mode() != Gtk.WrapMode.NONE)
 
 	def on_toggle_action_activate(self, action):
 		view = self.window.get_active_view()
